@@ -1,6 +1,14 @@
 import express from 'express';
+import GraphHTTP from 'express-graphql';
+import Schema from './graphql/schema';
 
 const app = express();
+
+// GraphQL
+app.use('/graphql', GraphHTTP({
+  schema: Schema,
+}));
+
 app.get('/', (req, res) => {
   res.send('Hello World');
 });

@@ -14,8 +14,8 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
-      portada: {
-        type: Sequelize.INTEGER
+      cover: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
