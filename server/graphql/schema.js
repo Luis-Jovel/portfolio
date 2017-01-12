@@ -6,11 +6,11 @@ import {
   GraphQLList,
 } from 'graphql';
 
-import db from '../models';
+import db from '../database/models';
 
-let Image;
+let ImageType;
 
-const Project = new GraphQLObjectType({
+const ProjectType = new GraphQLObjectType({
   name: 'Project',
   description: 'Portfolio\'s project',
   fields() {
@@ -40,16 +40,16 @@ const Project = new GraphQLObjectType({
         },
       },
       images: {
-        type: new GraphQLList(Image),
+        type: new GraphQLList(ImageType),
         resolve(project) {
-          return project.getImages;
+          return project.getImages();
         },
       },
     };
   },
 });
 
-Image = new GraphQLObjectType({
+ImageType = new GraphQLObjectType({
   name: 'Image',
   description: "Project's images",
   fields() {
@@ -73,7 +73,7 @@ Image = new GraphQLObjectType({
         },
       },
       project: {
-        type: new GraphQLList(Project),
+        type: ProjectType,
         resolve(image) {
           return image.getProject();
         },
@@ -87,7 +87,7 @@ const Query = new GraphQLObjectType({
   description: 'Root query object',
   fields: () => ({
     projects: {
-      type: new GraphQLList(Project),
+      type: new GraphQLList(ProjectType),
       args: {
         id: {
           type: GraphQLInt,
@@ -95,6 +95,17 @@ const Query = new GraphQLObjectType({
       },
       resolve(root, args) {
         return db.Project.findAll({ where: args });
+      },
+    },
+    images: {
+      type: new GraphQLList(ImageType),
+      args: {
+        id: {
+          type: GraphQLInt,
+        },
+      },
+      resolve(root, args) {
+        return db.Image.findAll({ where: args });
       },
     },
   }),

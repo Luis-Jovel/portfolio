@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "build:server": "cross-env NODE_ENV=production webpack --config webpack.config.server.js",
-    "migrate:refresh": "sequelize db:migrate:undo:all && sequelize db:migrate"
+    "migrate:refresh": "sequelize db:migrate:undo:all && sequelize db:migrate",
+    "migrate:seed": "sequelize db:seed:undo:all && sequelize db:seed:all",
+    "migrate:refresh:seed": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:undo:all && sequelize db:seed:all"
   },
   "keywords": [
     "postgress",

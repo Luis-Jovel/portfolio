@@ -7,6 +7,7 @@ const app = express();
 // GraphQL
 app.use('/graphql', GraphHTTP({
   schema: Schema,
+  graphiql: true,
 }));
 
 app.get('/', (req, res) => {

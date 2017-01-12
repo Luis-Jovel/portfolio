@@ -2,5 +2,4 @@ webpack.config.server.js
 index.js
 
 # schaffolded code
-server/migrations
-server/models
+server/database/*
