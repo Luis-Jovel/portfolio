@@ -50,23 +50,187 @@
 
 	var _express2 = _interopRequireDefault(_express);
 
+	var _expressGraphql = __webpack_require__(2);
+
+	var _expressGraphql2 = _interopRequireDefault(_expressGraphql);
+
+	var _schema = __webpack_require__(3);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var app = (0, _express2.default)();
+	app.set('port', process.env.PORT || 3001);
+	// serve static assets in production
+	if (process.env.NODE_ENV === 'production') {
+	  app.use(_express2.default.static('client/build'));
+	}
 
-	app.get('/', function (req, res) {
-	  res.send('Hello World');
-	});
+	// graphQL
+	var shouldUseGraphiql = process.env.NODE_ENV !== 'production';
+	app.use('/graphql', (0, _expressGraphql2.default)({
+	  schema: _schema2.default,
+	  graphiql: shouldUseGraphiql
+	}));
 
-	app.listen(process.env.PORT || 3000, function () {
-	  console.log('Example app listening on port 3000!');
+	app.listen(app.get('port'), function () {
+	  console.log('App listening on port ' + app.get('port') + '!'); //eslint-disable-line
 	});
 
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = require("express");
+	module.exports = require("/home/luis/Documents/Projects/express-react-postgresql/node_modules/express");
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = require("/home/luis/Documents/Projects/express-react-postgresql/node_modules/express-graphql");
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _graphql = __webpack_require__(4);
+
+	var _models = __webpack_require__(5);
+
+	var _models2 = _interopRequireDefault(_models);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// eslint-disable-line
+
+	var ImageType = void 0;
+
+	var ProjectType = new _graphql.GraphQLObjectType({
+	  name: 'Project',
+	  description: 'Portfolio\'s project',
+	  fields: function fields() {
+	    return {
+	      id: {
+	        type: _graphql.GraphQLInt,
+	        resolve: function resolve(project) {
+	          return project.id;
+	        }
+	      },
+	      title: {
+	        type: _graphql.GraphQLString,
+	        resolve: function resolve(project) {
+	          return project.title;
+	        }
+	      },
+	      description: {
+	        type: _graphql.GraphQLString,
+	        resolve: function resolve(project) {
+	          return project.description;
+	        }
+	      },
+	      cover: {
+	        type: _graphql.GraphQLString,
+	        resolve: function resolve(project) {
+	          return project.cover;
+	        }
+	      },
+	      images: {
+	        type: new _graphql.GraphQLList(ImageType),
+	        resolve: function resolve(project) {
+	          return project.getImages();
+	        }
+	      }
+	    };
+	  }
+	});
+
+	ImageType = new _graphql.GraphQLObjectType({
+	  name: 'Image',
+	  description: "Project's images",
+	  fields: function fields() {
+	    return {
+	      id: {
+	        type: _graphql.GraphQLInt,
+	        resolve: function resolve(image) {
+	          return image.id;
+	        }
+	      },
+	      url: {
+	        type: _graphql.GraphQLString,
+	        resolve: function resolve(image) {
+	          return image.url;
+	        }
+	      },
+	      description: {
+	        type: _graphql.GraphQLString,
+	        resolve: function resolve(image) {
+	          return image.description;
+	        }
+	      },
+	      project: {
+	        type: ProjectType,
+	        resolve: function resolve(image) {
+	          return image.getProject();
+	        }
+	      }
+	    };
+	  }
+	});
+
+	var Query = new _graphql.GraphQLObjectType({
+	  name: 'Query',
+	  description: 'Root query object',
+	  fields: function fields() {
+	    return {
+	      projects: {
+	        type: new _graphql.GraphQLList(ProjectType),
+	        args: {
+	          id: {
+	            type: _graphql.GraphQLInt
+	          }
+	        },
+	        resolve: function resolve(root, args) {
+	          return _models2.default.Project.findAll({ where: args });
+	        }
+	      },
+	      images: {
+	        type: new _graphql.GraphQLList(ImageType),
+	        args: {
+	          id: {
+	            type: _graphql.GraphQLInt
+	          }
+	        },
+	        resolve: function resolve(root, args) {
+	          return _models2.default.Image.findAll({ where: args });
+	        }
+	      }
+	    };
+	  }
+	});
+	var Schema = new _graphql.GraphQLSchema({
+	  query: Query
+	});
+
+	exports.default = Schema;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = require("/home/luis/Documents/Projects/express-react-postgresql/node_modules/graphql");
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	module.exports = require("/home/luis/Documents/Projects/express-react-postgresql/server/database/models");
 
 /***/ }
 /******/ ]);

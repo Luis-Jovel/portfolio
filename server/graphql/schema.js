@@ -6,7 +6,7 @@ import {
   GraphQLList,
 } from 'graphql';
 
-import db from '../database/models';
+import db from 'models'; // eslint-disable-line
 
 let ImageType;
 

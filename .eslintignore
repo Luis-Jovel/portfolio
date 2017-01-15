@@ -1,5 +1,6 @@
 webpack.config.server.js
 index.js
+dist/*
 
 # schaffolded code
 server/database/*

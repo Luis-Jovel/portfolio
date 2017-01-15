@@ -3,17 +3,19 @@ import GraphHTTP from 'express-graphql';
 import Schema from './graphql/schema';
 
 const app = express();
+app.set('port', process.env.PORT || 3001);
+// serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+}
 
-// GraphQL
+// graphQL
+const shouldUseGraphiql = process.env.NODE_ENV !== 'production';
 app.use('/graphql', GraphHTTP({
   schema: Schema,
-  graphiql: true,
+  graphiql: shouldUseGraphiql,
 }));
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Example app listening on port 3000!'); //eslint-disable-line
+app.listen(app.get('port'), () => {
+  console.log(`App listening on port ${app.get('port')}!`); //eslint-disable-line
 });

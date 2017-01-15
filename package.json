@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "build:server": "cross-env NODE_ENV=production webpack --config webpack.config.server.js",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node index.js",
+    "client": "node start-client.js",
+    "prod": "cross-env NODE_ENV=production node dist/server.bundle.js",
+    "build": "webpack --config webpack.config.server.js",
     "migrate:refresh": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "migrate:seed": "sequelize db:seed:undo:all && sequelize db:seed:all",
     "migrate:refresh:seed": "npm run migrate:refresh && npm run migrate:seed"
@@ -31,9 +34,11 @@
   },
   "devDependencies": {
     "babel-loader": "^6.2.8",
+    "babel-plugin-resolver": "^1.1.0",
     "babel-plugin-webpack-loaders": "^0.8.0",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
+    "concurrently": "^3.1.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",

@@ -27,7 +27,10 @@ module.exports = {
   plugins: [
     new externalsPlugin({
       type: 'commonjs',
-      include: path.join(__dirname, './node_modules/')
+      include: [
+        path.join(__dirname, './node_modules/'),
+        path.join(__dirname, './server/database/'),
+      ]
     })
   ]
 };

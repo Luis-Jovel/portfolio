@@ -1,8 +1,17 @@
 {
-  "presets": ["latest", "stage-0"],
+  "presets": [
+    "latest",
+    "stage-0"
+  ],
+  "plugins": [
+    ["resolver", { "resolveDirs": ["server/database"] }]
+  ],
   "env": {
     "production": {
-      "presets": ["latest", {"modules": false}, "stage-0"]
+      "presets": [
+        "stage-0",
+        ["latest", {"modules": false}]
+      ]
     }
   }
 }
